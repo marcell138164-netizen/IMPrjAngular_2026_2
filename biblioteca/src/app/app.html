@@ -1,0 +1,505 @@
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca UTP | Panel de Control</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --sidebar-w: 250px;
+        --azul: #2b3a67;
+        --azul-oscuro: #1f2a4d;
+        --acento: #4e73df;
+        --bg: #f5f7fb;
+    }
+    * { font-family: 'Poppins', sans-serif; }
+    body {
+        background-color: var(--bg);
+        overflow-x: hidden;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--sidebar-w);
+        height: 100vh;
+        background: linear-gradient(180deg, var(--azul), var(--azul-oscuro));
+        color: #fff;
+        padding-top: 20px;
+        z-index: 1000;
+        transition: all 0.3s;
+    }
+    .sidebar .brand {
+        text-align: center;
+        padding: 10px 0 25px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 15px;
+    }
+    .sidebar .brand i {
+        font-size: 2rem;
+        color: #f6c23e;
+    }
+    .sidebar .brand h4 {
+        margin: 8px 0 0 0;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    .sidebar .nav-link {
+        color: rgba(255,255,255,0.75);
+        padding: 12px 25px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+    }
+    .sidebar .nav-link i {
+        width: 22px;
+        margin-right: 10px;
+        text-align: center;
+    }
+    .sidebar .nav-link:hover {
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+    }
+    .sidebar .nav-link.active {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        border-left: 3px solid #f6c23e;
+    }
+    .sidebar-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 25px;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.5);
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+        margin-left: var(--sidebar-w);
+        min-height: 100vh;
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar {
+        background: #fff;
+        padding: 14px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 900;
+    }
+    .topbar h5 {
+        margin: 0;
+        font-weight: 600;
+        color: #2c2c2c;
+    }
+    .topbar .search-box {
+        max-width: 320px;
+    }
+    .topbar .search-box .form-control {
+        border-radius: 20px 0 0 20px;
+        border-right: none;
+    }
+    .topbar .search-box .btn {
+        border-radius: 0 20px 20px 0;
+        background: var(--bg);
+        border: 1px solid #ced4da;
+        border-left: none;
+    }
+    .topbar .user-info img {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .topbar .icon-btn {
+        color: #6c757d;
+        font-size: 1.1rem;
+        position: relative;
+        margin-right: 22px;
+    }
+    .topbar .icon-btn .badge {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        font-size: 0.6rem;
+    }
+
+    .content-wrapper {
+        padding: 28px 30px;
+    }
+
+    /* ===== KPI CARDS ===== */
+    .kpi-card {
+        border: none;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        padding: 22px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+    .kpi-card:hover {
+        transform: translateY(-3px);
+    }
+    .kpi-card .icon-circle {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #fff;
+    }
+    .kpi-card h3 {
+        font-weight: 700;
+        margin: 10px 0 0 0;
+    }
+    .kpi-card .label {
+        color: #8a8a8a;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .kpi-card .trend {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .bg-libros { background: linear-gradient(135deg, #4e73df, #2e59d9); }
+    .bg-autores { background: linear-gradient(135deg, #1cc88a, #17a673); }
+    .bg-prestamos { background: linear-gradient(135deg, #f6c23e, #dda20a); }
+    .bg-usuarios { background: linear-gradient(135deg, #e74a3b, #c0392b); }
+
+    /* ===== PANELS ===== */
+    .panel {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+        border: none;
+        overflow: hidden;
+    }
+    .panel-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .panel-header h6 {
+        margin: 0;
+        font-weight: 600;
+        color: #2c2c2c;
+    }
+    .table thead th {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        color: #8a8a8a;
+        border-bottom: 2px solid #f0f0f0;
+        font-weight: 600;
+    }
+    .table td {
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+    .genre-bar .progress {
+        height: 8px;
+        border-radius: 10px;
+    }
+    .genre-bar .label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+        color: #495057;
+    }
+
+    @media (max-width: 992px) {
+        .sidebar { margin-left: calc(var(--sidebar-w) * -1); }
+        .main-content { margin-left: 0; }
+        .sidebar.show { margin-left: 0; }
+    }
+</style>
+</head>
+<body>
+    <h1>Mi Biblioteca</h1>
+    <app-libros></app-libros>
+    <app-inicio></app-inicio>
+    <app-menu></app-menu>
+    
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <div class="brand">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <h4>Biblioteca UTP</h4>
+    </div>
+    <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link active" href="#"><i class="fa-solid fa-gauge-high"></i>Panel de Control</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-book"></i>Libros</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-pen"></i>Autores</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-right-left"></i>Préstamos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-users"></i>Usuarios</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-chart-line"></i>Reportes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-gear"></i>Configuración</a></li>
+    </ul>
+    <div class="sidebar-footer">
+        Sistema de Biblioteca v1.0<br>© 2026
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-light d-lg-none me-2" id="btnToggleSidebar"><i class="fa-solid fa-bars"></i></button>
+            <div>
+                <h5>Panel de Control</h5>
+                <small class="text-muted">Bienvenido de vuelta, gestiona tu biblioteca</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center">
+            <div class="input-group search-box d-none d-md-flex me-4">
+                <input type="text" class="form-control form-control-sm" placeholder="Buscar libro, autor...">
+                <button class="btn btn-sm"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <span class="icon-btn"><i class="fa-solid fa-bell"></i><span class="badge rounded-pill bg-danger">3</span></span>
+            <div class="user-info d-flex align-items-center">
+                <img src="https://ui-avatars.com/api/?name=Marcel&background=4e73df&color=fff" alt="usuario">
+                <div class="ms-2 d-none d-md-block">
+                    <div style="font-size:0.85rem; font-weight:600;">Marcel</div>
+                    <div style="font-size:0.75rem; color:#8a8a8a;">Administrador</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+
+        <!-- KPI CARDS -->
+        <div class="row g-3 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="kpi-card d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="label">Total de Libros</div>
+                        <h3 id="totalLibros">0</h3>
+                        <span class="trend text-success"><i class="fa-solid fa-arrow-up"></i> 8% este mes</span>
+                    </div>
+                    <div class="icon-circle bg-libros"><i class="fa-solid fa-book-open"></i></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="kpi-card d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="label">Total de Autores</div>
+                        <h3 id="totalAutores">0</h3>
+                        <span class="trend text-success"><i class="fa-solid fa-arrow-up"></i> 3% este mes</span>
+                    </div>
+                    <div class="icon-circle bg-autores"><i class="fa-solid fa-user-pen"></i></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="kpi-card d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="label">Préstamos Activos</div>
+                        <h3 id="totalPrestamos">0</h3>
+                        <span class="trend text-danger"><i class="fa-solid fa-arrow-down"></i> 2% este mes</span>
+                    </div>
+                    <div class="icon-circle bg-prestamos"><i class="fa-solid fa-right-left"></i></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="kpi-card d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="label">Usuarios Registrados</div>
+                        <h3 id="totalUsuarios">0</h3>
+                        <span class="trend text-success"><i class="fa-solid fa-arrow-up"></i> 12% este mes</span>
+                    </div>
+                    <div class="icon-circle bg-usuarios"><i class="fa-solid fa-users"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <!-- TABLA LIBROS -->
+            <div class="col-xl-8">
+                <div class="panel mb-4">
+                    <div class="panel-header">
+                        <h6><i class="fa-solid fa-list text-primary me-1"></i> Últimos Libros Ingresados</h6>
+                        <button class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Nuevo Libro</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Título</th>
+                                    <th>Autor</th>
+                                    <th>Género</th>
+                                    <th>Año</th>
+                                    <th>Stock</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaLibros"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISTRIBUCION POR GENERO -->
+            <div class="col-xl-4">
+                <div class="panel mb-4">
+                    <div class="panel-header">
+                        <h6><i class="fa-solid fa-chart-pie text-primary me-1"></i> Distribución por Género</h6>
+                    </div>
+                    <div class="p-3" id="generoStats"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA AUTORES -->
+        <div class="panel mb-4">
+            <div class="panel-header">
+                <h6><i class="fa-solid fa-feather text-primary me-1"></i> Autores Registrados</h6>
+                <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-plus"></i> Nuevo Autor</button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Nacionalidad</th>
+                            <th>Libros Publicados</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAutores"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ===============================
+    // DATOS SIMULADOS (mock data)
+    // Reemplazar luego por datos reales desde el backend en Python
+    // ===============================
+    const libros = [
+        { id: 1, titulo: "Cien Años de Soledad", autor: "Gabriel García Márquez", genero: "Novela", anio: 1967, stock: 5, estado: "Disponible" },
+        { id: 2, titulo: "1984", autor: "George Orwell", genero: "Distopía", anio: 1949, stock: 0, estado: "Prestado" },
+        { id: 3, titulo: "El Principito", autor: "Antoine de Saint-Exupéry", genero: "Fábula", anio: 1943, stock: 3, estado: "Disponible" },
+        { id: 4, titulo: "Rayuela", autor: "Julio Cortázar", genero: "Novela", anio: 1963, stock: 2, estado: "Disponible" },
+        { id: 5, titulo: "Fahrenheit 451", autor: "Ray Bradbury", genero: "Ciencia Ficción", anio: 1953, stock: 0, estado: "Prestado" },
+        { id: 6, titulo: "Don Quijote de la Mancha", autor: "Miguel de Cervantes", genero: "Novela", anio: 1605, stock: 4, estado: "Disponible" }
+    ];
+
+    const autores = [
+        { id: 1, nombre: "Gabriel García Márquez", nacionalidad: "Colombia", publicados: 12 },
+        { id: 2, nombre: "George Orwell", nacionalidad: "Reino Unido", publicados: 8 },
+        { id: 3, nombre: "Antoine de Saint-Exupéry", nacionalidad: "Francia", publicados: 4 },
+        { id: 4, nombre: "Julio Cortázar", nacionalidad: "Argentina", publicados: 15 },
+        { id: 5, nombre: "Ray Bradbury", nacionalidad: "Estados Unidos", publicados: 20 },
+        { id: 6, nombre: "Miguel de Cervantes", nacionalidad: "España", publicados: 3 }
+    ];
+
+    const generos = [
+        { nombre: "Novela", porcentaje: 45, color: "bg-primary" },
+        { nombre: "Ciencia Ficción", porcentaje: 20, color: "bg-warning" },
+        { nombre: "Distopía", porcentaje: 15, color: "bg-danger" },
+        { nombre: "Fábula", porcentaje: 20, color: "bg-success" }
+    ];
+
+    const prestamosActivos = libros.filter(l => l.estado === "Prestado").length;
+    const usuariosRegistrados = 42;
+
+    // ===============================
+    // Renderizado de KPIs
+    // ===============================
+    document.getElementById("totalLibros").textContent = libros.length;
+    document.getElementById("totalAutores").textContent = autores.length;
+    document.getElementById("totalPrestamos").textContent = prestamosActivos;
+    document.getElementById("totalUsuarios").textContent = usuariosRegistrados;
+
+    // ===============================
+    // Renderizado tabla de libros
+    // ===============================
+    const tablaLibros = document.getElementById("tablaLibros");
+    libros.forEach(libro => {
+        const badge = libro.estado === "Disponible"
+            ? '<span class="badge bg-success-subtle text-success border border-success-subtle">Disponible</span>'
+            : '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Prestado</span>';
+
+        tablaLibros.innerHTML += `
+            <tr>
+                <td>${libro.id}</td>
+                <td class="fw-semibold">${libro.titulo}</td>
+                <td>${libro.autor}</td>
+                <td>${libro.genero}</td>
+                <td>${libro.anio}</td>
+                <td>${libro.stock}</td>
+                <td>${badge}</td>
+            </tr>
+        `;
+    });
+
+    // ===============================
+    // Renderizado tabla de autores
+    // ===============================
+    const tablaAutores = document.getElementById("tablaAutores");
+    autores.forEach(autor => {
+        tablaAutores.innerHTML += `
+            <tr>
+                <td>${autor.id}</td>
+                <td class="fw-semibold">${autor.nombre}</td>
+                <td>${autor.nacionalidad}</td>
+                <td>${autor.publicados}</td>
+            </tr>
+        `;
+    });
+
+    // ===============================
+    // Renderizado distribución por género
+    // ===============================
+    const generoStats = document.getElementById("generoStats");
+    generos.forEach(g => {
+        generoStats.innerHTML += `
+            <div class="genre-bar mb-3">
+                <div class="label">
+                    <span>${g.nombre}</span>
+                    <span class="fw-semibold">${g.porcentaje}%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar ${g.color}" style="width:${g.porcentaje}%"></div>
+                </div>
+            </div>
+        `;
+    });
+
+    // Toggle sidebar en móvil
+    document.getElementById("btnToggleSidebar").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.toggle("show");
+    });
+</script>
+
+</body>
+</html>

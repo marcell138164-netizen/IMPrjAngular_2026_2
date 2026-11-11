@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Biblioteca</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f4f6f9;
+    }
+    .navbar-brand i {
+        margin-right: 8px;
+    }
+    .card-stat {
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .card-stat .icon {
+        font-size: 2.5rem;
+        opacity: 0.7;
+    }
+    .bg-libros {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+    }
+    .bg-autores {
+        background: linear-gradient(135deg, #1cc88a, #13855c);
+    }
+    .bg-prestamos {
+        background: linear-gradient(135deg, #f6c23e, #dda20a);
+    }
+    .bg-usuarios {
+        background: linear-gradient(135deg, #e74a3b, #be2617);
+    }
+    .table thead {
+        background-color: #343a40;
+        color: #fff;
+    }
+    footer {
+        padding: 15px 0;
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="fa-solid fa-book"></i>Biblioteca UTP
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Libros</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Autores</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Préstamos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Usuarios</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <h2 class="mb-4"><i class="fa-solid fa-chart-simple"></i> Panel de Control</h2>
+
+    <!-- Tarjetas de estadísticas (datos simulados) -->
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card card-stat bg-libros p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Total de Libros</h6>
+                        <h2 id="totalLibros">0</h2>
+                    </div>
+                    <i class="fa-solid fa-book-open icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat bg-autores p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Total de Autores</h6>
+                        <h2 id="totalAutores">0</h2>
+                    </div>
+                    <i class="fa-solid fa-user-pen icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat bg-prestamos p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Préstamos Activos</h6>
+                        <h2 id="totalPrestamos">0</h2>
+                    </div>
+                    <i class="fa-solid fa-arrow-right-arrow-left icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-stat bg-usuarios p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Usuarios Registrados</h6>
+                        <h2 id="totalUsuarios">0</h2>
+                    </div>
+                    <i class="fa-solid fa-users icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de libros simulados -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-list"></i> Últimos Libros Ingresados</span>
+            <button class="btn btn-sm btn-primary"><i class="fa-solid fa-plus"></i> Nuevo Libro</button>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Género</th>
+                        <th>Año</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaLibros">
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tabla de autores simulados -->
+    <div class="card mt-4 mb-4 shadow-sm">
+        <div class="card-header">
+            <i class="fa-solid fa-feather"></i> Autores Registrados
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Nacionalidad</th>
+                        <th>Libros Publicados</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaAutores">
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    Sistema de Biblioteca &copy; 2026 - Proyecto Académico
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ===============================
+    // DATOS SIMULADOS (mock data)
+    // Luego reemplazar por datos reales (Python/backend)
+    // ===============================
+
+    const libros = [
+        { id: 1, titulo: "Cien Años de Soledad", autor: "Gabriel García Márquez", genero: "Novela", anio: 1967, stock: 5, estado: "Disponible" },
+        { id: 2, titulo: "1984", autor: "George Orwell", genero: "Distopía", anio: 1949, stock: 0, estado: "Prestado" },
+        { id: 3, titulo: "El Principito", autor: "Antoine de Saint-Exupéry", genero: "Fábula", anio: 1943, stock: 3, estado: "Disponible" },
+        { id: 4, titulo: "Rayuela", autor: "Julio Cortázar", genero: "Novela", anio: 1963, stock: 2, estado: "Disponible" },
+        { id: 5, titulo: "Fahrenheit 451", autor: "Ray Bradbury", genero: "Ciencia Ficción", anio: 1953, stock: 0, estado: "Prestado" }
+    ];
+
+    const autores = [
+        { id: 1, nombre: "Gabriel García Márquez", nacionalidad: "Colombia", publicados: 12 },
+        { id: 2, nombre: "George Orwell", nacionalidad: "Reino Unido", publicados: 8 },
+        { id: 3, nombre: "Antoine de Saint-Exupéry", nacionalidad: "Francia", publicados: 4 },
+        { id: 4, nombre: "Julio Cortázar", nacionalidad: "Argentina", publicados: 15 },
+        { id: 5, nombre: "Ray Bradbury", nacionalidad: "Estados Unidos", publicados: 20 }
+    ];
+
+    const prestamosActivos = libros.filter(l => l.estado === "Prestado").length;
+    const usuariosRegistrados = 42; // valor simulado
+
+    // ===============================
+    // Renderizado de estadísticas
+    // ===============================
+    document.getElementById("totalLibros").textContent = libros.length;
+    document.getElementById("totalAutores").textContent = autores.length;
+    document.getElementById("totalPrestamos").textContent = prestamosActivos;
+    document.getElementById("totalUsuarios").textContent = usuariosRegistrados;
+
+    // ===============================
+    // Renderizado tabla de libros
+    // ===============================
+    const tablaLibros = document.getElementById("tablaLibros");
+    libros.forEach(libro => {
+        const badge = libro.estado === "Disponible"
+            ? '<span class="badge bg-success">Disponible</span>'
+            : '<span class="badge bg-danger">Prestado</span>';
+
+        tablaLibros.innerHTML += `
+            <tr>
+                <td>${libro.id}</td>
+                <td>${libro.titulo}</td>
+                <td>${libro.autor}</td>
+                <td>${libro.genero}</td>
+                <td>${libro.anio}</td>
+                <td>${libro.stock}</td>
+                <td>${badge}</td>
+            </tr>
+        `;
+    });
+
+    // ===============================
+    // Renderizado tabla de autores
+    // ===============================
+    const tablaAutores = document.getElementById("tablaAutores");
+    autores.forEach(autor => {
+        tablaAutores.innerHTML += `
+            <tr>
+                <td>${autor.id}</td>
+                <td>${autor.nombre}</td>
+                <td>${autor.nacionalidad}</td>
+                <td>${autor.publicados}</td>
+            </tr>
+        `;
+    });
+</script>
+
+</body>
+</html>
